@@ -10,7 +10,9 @@ const TripClock = (() => {
     let next = null;
     if (day) {
       const index = TRIP.days[day - 1].events.findIndex(event => {
-        const [hour, min] = event[0].match(/\d+:\d+/)[0].split(':').map(Number);
+        const time = event[0].match(/\d+:\d+/);
+        if (!time) return false; // 時刻未定の予定は次の予定の時刻判定から除外。
+        const [hour, min] = time[0].split(':').map(Number);
         return hour * 60 + min >= minute;
       });
       if (index >= 0) next = {day, event:TRIP.days[day - 1].events[index]};
